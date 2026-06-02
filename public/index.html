@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprar Ingressos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4F46E5;
+      --primary-dark: #3730A3;
+      --primary-light: #EEF2FF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      color: var(--gray-900);
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: white;
+    }
+    .header .emoji { font-size: 3rem; margin-bottom: .5rem; }
+    .header h1 { font-size: 2rem; font-weight: 800; }
+    .header p { opacity: .85; margin-top: .25rem; font-size: 1rem; }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    /* Ticket type selector */
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .ticket-option {
+      position: relative;
+      cursor: pointer;
+    }
+    .ticket-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .ticket-card {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+      transition: all .2s;
+      user-select: none;
+    }
+    .ticket-card .icon { font-size: 2rem; margin-bottom: .5rem; }
+    .ticket-card .name { font-weight: 700; font-size: 1rem; color: var(--gray-700); }
+    .ticket-card .sub { font-size: .75rem; color: var(--gray-400); margin-top: .1rem; }
+    .ticket-card .price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: .5rem;
+    }
+
+    .ticket-option input:checked + .ticket-card {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .ticket-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79,70,229,.15);
+    }
+
+    /* Quantity */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .qty-row label {
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      flex: 1;
+    }
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      background: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+    }
+    .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .qty-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    /* Form fields */
+    .form-row { margin-bottom: 1rem; }
+    .form-row label {
+      display: block;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: .375rem;
+    }
+    .form-row input {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: .9375rem;
+      font-family: inherit;
+      transition: border-color .2s;
+      background: white;
+      color: var(--gray-900);
+    }
+    .form-row input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79,70,229,.1);
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* Total */
+    .total-bar {
+      background: var(--primary-light);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    .total-bar .label { font-size: .875rem; color: var(--gray-600); font-weight: 600; }
+    .total-bar .value { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
+
+    /* Button */
+    .btn-pay {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 1.25rem;
+      transition: transform .15s, box-shadow .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .btn-pay:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79,70,229,.4);
+    }
+    .btn-pay:active { transform: translateY(0); }
+    .btn-pay:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .pix-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: #E8F5E9;
+      color: #2E7D32;
+      border-radius: 6px;
+      padding: .2rem .6rem;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: rgba(255,255,255,.7);
+      font-size: .8125rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .ticket-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">🎟️</div>
+      <h1 id="evento-nome">Carregando...</h1>
+      <p>Compra de ingressos via PIX — rápido e seguro</p>
+    </div>
+
+    <form id="form-checkout" action="/checkout" method="POST">
+      <!-- Tipo de ingresso -->
+      <div class="card">
+        <h2>🎫 Escolha seu ingresso</h2>
+
+        <div class="ticket-grid">
+          <label class="ticket-option">
+            <input type="radio" name="tipo" value="mesa" id="tipo-mesa" required />
+            <div class="ticket-card">
+              <div class="icon">🪑</div>
+              <div class="name">Mesa</div>
+              <div class="sub">4 lugares</div>
+              <div class="price">R$ 130,00</div>
+            </div>
+          </label>
+
+          <label class="ticket-option">
+            <input type="radio" name="tipo" value="individual" id="tipo-individual" required />
+            <div class="ticket-card">
+              <div class="icon">👤</div>
+              <div class="name">Individual</div>
+              <div class="sub">1 lugar</div>
+              <div class="price">R$ 40,00</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="qty-row">
+          <label>Quantidade</label>
+          <div class="qty-controls">
+            <button type="button" class="qty-btn" id="btn-minus">−</button>
+            <span class="qty-value" id="qty-display">1</span>
+            <button type="button" class="qty-btn" id="btn-plus">+</button>
+          </div>
+        </div>
+        <input type="hidden" name="quantidade" id="quantidade-input" value="1" />
+
+        <div class="total-bar">
+          <span class="label">Total a pagar</span>
+          <span class="value" id="total-display">—</span>
+        </div>
+      </div>
+
+      <!-- Dados do responsável -->
+      <div class="card">
+        <h2>👤 Dados do responsável</h2>
+
+        <div class="form-row">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required autocomplete="name" />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-row">
+            <label for="cpf">CPF *</label>
+            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required inputmode="numeric" />
+          </div>
+          <div class="form-row">
+            <label for="telefone">Telefone *</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" maxlength="15" required inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+        </div>
+
+        <button type="submit" class="btn-pay" id="btn-pay">
+          <span>Gerar QR Code PIX</span>
+          <span class="pix-badge">⚡ PIX</span>
+        </button>
+      </div>
+    </form>
+
+    <p class="footer-note">🔒 Pagamento seguro via PIX — Efí Bank</p>
+  </div>
+
+  <script>
+    const PRECOS = { mesa: 130, individual: 40 };
+    let tipo = null;
+    let quantidade = 1;
+
+    // Nome do evento
+    fetch('/api/stats')
+      .then(r => r.json())
+      .then(() => {})
+      .catch(() => {});
+
+    document.title = 'Comprar Ingressos';
+    fetch('/api/stats').catch(() => {});
+
+    // Carrega nome do evento via query na página de confirmação
+    // (não temos rota dedicada, mas podemos deixar o título padrão)
+
+    function updateTotal() {
+      const display = document.getElementById('total-display');
+      const totalBar = document.querySelector('.total-bar');
+      if (!tipo) {
+        display.textContent = '—';
+        return;
+      }
+      const valor = PRECOS[tipo] * quantidade;
+      display.textContent = `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    }
+
+    document.querySelectorAll('input[name="tipo"]').forEach(radio => {
+      radio.addEventListener('change', e => {
+        tipo = e.target.value;
+        updateTotal();
+      });
+    });
+
+    document.getElementById('btn-minus').addEventListener('click', () => {
+      if (quantidade > 1) {
+        quantidade--;
+        document.getElementById('qty-display').textContent = quantidade;
+        document.getElementById('quantidade-input').value = quantidade;
+        updateTotal();
+      }
+    });
+
+    document.getElementById('btn-plus').addEventListener('click', () => {
+      if (quantidade < 20) {
+        quantidade++;
+        document.getElementById('qty-display').textContent = quantidade;
+        document.getElementById('quantidade-input').value = quantidade;
+        updateTotal();
+      }
+    });
+
+    // CPF mask
+    document.getElementById('cpf').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      this.value = v;
+    });
+
+    // Phone mask
+    document.getElementById('telefone').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length >= 7) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+      } else if (v.length >= 3) {
+        v = v.replace(/^(\d{2})(\d+)/, '($1) $2');
+      }
+      this.value = v;
+    });
+
+    // Form submit
+    document.getElementById('form-checkout').addEventListener('submit', function (e) {
+      if (!tipo) {
+        e.preventDefault();
+        alert('Por favor, selecione o tipo de ingresso.');
+        return;
+      }
+      const cpfLimpo = document.getElementById('cpf').value.replace(/\D/g, '');
+      if (cpfLimpo.length !== 11) {
+        e.preventDefault();
+        alert('CPF inválido. Digite os 11 dígitos.');
+        return;
+      }
+      const btn = document.getElementById('btn-pay');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Gerando cobrança PIX...</span>';
+    });
+  </script>
+</body>
+</html>

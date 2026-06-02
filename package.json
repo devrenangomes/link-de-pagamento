@@ -1,0 +1,17 @@
+{
+  "name": "link-de-pagamento",
+  "version": "1.0.0",
+  "description": "Link de pagamento PIX via Efí Bank",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "uuid": "^9.0.1"
+  }
+}

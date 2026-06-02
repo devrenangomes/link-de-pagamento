@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagar com PIX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #EEF2FF;
+      --success: #10B981;
+      --success-light: #ECFDF5;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      color: var(--gray-900);
+    }
+
+    .container { max-width: 520px; margin: 0 auto; }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 2rem;
+    }
+    .header h1 { font-size: 1.75rem; font-weight: 800; }
+    .header p { opacity: .85; margin-top: .25rem; }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pedido-info {
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .pedido-info .nome { font-weight: 700; font-size: 1.0625rem; color: var(--gray-900); }
+    .pedido-info .detalhe { color: var(--gray-600); font-size: .875rem; margin-top: .2rem; }
+    .pedido-info .total { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-top: .5rem; }
+
+    .qr-wrapper {
+      display: inline-block;
+      padding: 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+    }
+    .qr-wrapper img { display: block; width: 220px; height: 220px; }
+
+    .timer {
+      font-size: .875rem;
+      color: var(--gray-600);
+      margin-bottom: 1.25rem;
+    }
+    .timer strong { color: var(--primary); }
+    .timer.urgente strong { color: #EF4444; }
+
+    .copiar-box {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .copiar-box textarea {
+      width: 100%;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      font-size: .8125rem;
+      font-family: monospace;
+      resize: none;
+      height: 80px;
+      color: var(--gray-700);
+      background: var(--gray-100);
+    }
+    .btn-copiar {
+      width: 100%;
+      padding: .875rem;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      background: white;
+      color: var(--primary);
+      font-size: .9375rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+    .btn-copiar:hover { background: var(--primary-light); }
+    .btn-copiar.copiado { background: var(--success); border-color: var(--success); color: white; }
+
+    .instrucoes {
+      text-align: left;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--gray-200);
+    }
+    .instrucoes h3 { font-size: .875rem; font-weight: 700; color: var(--gray-700); margin-bottom: .75rem; }
+    .instrucoes ol { padding-left: 1.25rem; }
+    .instrucoes li { font-size: .8125rem; color: var(--gray-600); margin-bottom: .375rem; line-height: 1.5; }
+
+    /* Sucesso */
+    .sucesso {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    .sucesso .check { font-size: 4rem; margin-bottom: 1rem; }
+    .sucesso h2 { font-size: 1.5rem; font-weight: 800; color: var(--success); margin-bottom: .5rem; }
+    .sucesso p { color: var(--gray-600); font-size: .9375rem; }
+    .btn-voltar {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: .875rem 2rem;
+      background: var(--success);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: .9375rem;
+      transition: opacity .2s;
+    }
+    .btn-voltar:hover { opacity: .85; }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      background: #FEF3C7;
+      color: #92400E;
+      border-radius: 20px;
+      padding: .3rem .9rem;
+      font-size: .8125rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    .status-tag.pago { background: var(--success-light); color: #065F46; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .pulsing { animation: pulse 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💳 Pagar com PIX</h1>
+      <p>Escaneie o QR Code ou copie o código</p>
+    </div>
+
+    <div class="card" id="card-loading">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p style="color:#6B7280">Carregando dados de pagamento...</p>
+      </div>
+    </div>
+
+    <div class="card" id="card-pagamento" style="display:none">
+      <div id="pedido-info-box" class="pedido-info"></div>
+
+      <div id="status-tag" class="status-tag pulsing">
+        ⏳ Aguardando pagamento
+      </div>
+
+      <div class="qr-wrapper">
+        <img id="qr-imagem" src="" alt="QR Code PIX" />
+      </div>
+
+      <div class="timer" id="timer-box"></div>
+
+      <div class="copiar-box">
+        <textarea id="pix-copia-cola" readonly></textarea>
+      </div>
+
+      <button class="btn-copiar" id="btn-copiar" onclick="copiarPix()">
+        📋 Copiar código PIX (Copia e Cola)
+      </button>
+
+      <div class="instrucoes">
+        <h3>Como pagar:</h3>
+        <ol>
+          <li>Abra o app do seu banco</li>
+          <li>Selecione <strong>PIX → Ler QR Code</strong> ou <strong>Copia e Cola</strong></li>
+          <li>Escaneie o QR Code acima ou cole o código</li>
+          <li>Confirme o pagamento de <strong id="valor-instrucao">—</strong></li>
+          <li>Pronto! Seu ingresso será confirmado automaticamente ✅</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card sucesso" id="card-sucesso">
+      <div class="check">✅</div>
+      <h2>Pagamento confirmado!</h2>
+      <p>Seu ingresso foi registrado com sucesso.<br/>Em breve você receberá os detalhes.</p>
+      <a href="/" class="btn-voltar">Comprar mais ingressos</a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const txid = params.get('txid');
+    let intervalo;
+    let timerIntervalo;
+
+    if (!txid) {
+      document.getElementById('card-loading').innerHTML = '<p style="color:red;padding:1rem">Parâmetro txid ausente.</p>';
+    } else {
+      carregarPagamento();
+    }
+
+    async function carregarPagamento() {
+      try {
+        const res = await fetch(`/api/pagamento/${txid}`);
+        if (!res.ok) throw new Error('Pedido não encontrado');
+        const d = await res.json();
+
+        document.getElementById('pedido-info-box').innerHTML = `
+          <div class="nome">${d.nome}</div>
+          <div class="detalhe">Ingresso ${d.descricao} × ${d.quantidade}</div>
+          <div class="total">R$ ${parseFloat(d.total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+        `;
+
+        document.getElementById('valor-instrucao').textContent =
+          `R$ ${parseFloat(d.total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+        document.getElementById('qr-imagem').src = `data:image/png;base64,${d.imagem}`;
+        document.getElementById('pix-copia-cola').value = d.qrcode;
+
+        iniciarTimer(d.expiracao || 3600);
+
+        document.getElementById('card-loading').style.display = 'none';
+        document.getElementById('card-pagamento').style.display = 'block';
+
+        intervalo = setInterval(verificarStatus, 5000);
+      } catch (err) {
+        document.getElementById('card-loading').innerHTML =
+          `<p style="color:red;padding:1rem">Erro: ${err.message}</p>`;
+      }
+    }
+
+    async function verificarStatus() {
+      try {
+        const res = await fetch(`/api/status/${txid}`);
+        const d = await res.json();
+        if (d.pago || d.status === 'CONCLUIDA' || d.status === 'PAGO') {
+          clearInterval(intervalo);
+          clearInterval(timerIntervalo);
+          document.getElementById('card-pagamento').style.display = 'none';
+          document.getElementById('card-sucesso').style.display = 'block';
+        }
+      } catch {}
+    }
+
+    function iniciarTimer(segundos) {
+      let restante = segundos;
+      const box = document.getElementById('timer-box');
+
+      function atualizar() {
+        if (restante <= 0) {
+          box.innerHTML = '⚠️ QR Code expirado. <a href="/">Gere um novo.</a>';
+          clearInterval(timerIntervalo);
+          return;
+        }
+        const m = Math.floor(restante / 60).toString().padStart(2, '0');
+        const s = (restante % 60).toString().padStart(2, '0');
+        box.innerHTML = `⏱ Expira em <strong>${m}:${s}</strong>`;
+        if (restante <= 120) box.classList.add('urgente');
+        restante--;
+      }
+
+      atualizar();
+      timerIntervalo = setInterval(atualizar, 1000);
+    }
+
+    function copiarPix() {
+      const txt = document.getElementById('pix-copia-cola').value;
+      navigator.clipboard.writeText(txt).then(() => {
+        const btn = document.getElementById('btn-copiar');
+        btn.textContent = '✅ Código copiado!';
+        btn.classList.add('copiado');
+        setTimeout(() => {
+          btn.innerHTML = '📋 Copiar código PIX (Copia e Cola)';
+          btn.classList.remove('copiado');
+        }, 3000);
+      }).catch(() => {
+        document.getElementById('pix-copia-cola').select();
+        document.execCommand('copy');
+      });
+    }
+  </script>
+</body>
+</html>
