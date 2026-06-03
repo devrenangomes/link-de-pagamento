@@ -5,34 +5,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comprar Ingressos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --primary: #4F46E5;
-      --primary-dark: #3730A3;
-      --primary-light: #EEF2FF;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --gray-50: #F9FAFB;
-      --gray-100: #F3F4F6;
-      --gray-200: #E5E7EB;
-      --gray-400: #9CA3AF;
-      --gray-600: #4B5563;
-      --gray-700: #374151;
-      --gray-900: #111827;
-      --radius: 12px;
-      --shadow: 0 4px 24px rgba(0,0,0,.08);
+      --brand-blue: #0003ff;
+      --brand-yellow: #ffce00;
+      --brand-white: #ffffff;
+      --blue-50: #eef0ff;
+      --blue-100: #dde1ff;
+      --blue-200: #b4bcfd;
+      --blue-300: #8089fb;
+      --blue-400: #4a55fa;
+      --blue-500: #2a30f8;
+      --blue-600: #0003ff;
+      --blue-700: #0002cc;
+      --yellow-50: #fffae6;
+      --yellow-100: #fff2b8;
+      --yellow-200: #ffe680;
+      --yellow-300: #ffd84d;
+      --yellow-400: #ffce00;
+      --ink-950: #050720;
+      --ink-900: #0a0f2c;
+      --ink-800: #161c40;
+      --ink-700: #2a3055;
+      --ink-600: #444a72;
+      --ink-500: #6b7191;
+      --ink-400: #9097b0;
+      --ink-300: #b8bdcd;
+      --ink-200: #d4d7e3;
+      --ink-100: #e7e9f1;
+      --ink-50: #f2f4f9;
+      --paper: #fafbff;
+      --success: #1aa86a;
+      --warning: #f59e0b;
+      --danger: #e5384b;
+      --bg-app: var(--paper);
+      --bg-surface: var(--brand-white);
+      --bg-sunken: var(--ink-50);
+      --fg-1: var(--ink-900);
+      --fg-2: var(--ink-700);
+      --fg-3: var(--ink-500);
+      --fg-muted: var(--ink-400);
+      --fg-on-brand: var(--brand-white);
+      --fg-link: var(--blue-600);
+      --border-1: var(--ink-100);
+      --border-2: var(--ink-200);
+      --border-3: var(--ink-300);
+      --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+      --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+      --fs-xs: 0.75rem;
+      --fs-sm: 0.875rem;
+      --fs-md: 1rem;
+      --fs-lg: 1.125rem;
+      --fs-xl: 1.375rem;
+      --fs-2xl: 1.75rem;
+      --fs-3xl: 2.25rem;
+      --fs-4xl: 3rem;
+      --lh-snug: 1.2;
+      --lh-normal: 1.45;
+      --lh-loose: 1.65;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 2px 6px rgba(10, 15, 44, 0.06), 0 1px 2px rgba(10, 15, 44, 0.04);
+      --shadow-md: 0 8px 20px rgba(10, 15, 44, 0.08), 0 2px 6px rgba(10, 15, 44, 0.05);
+      --shadow-lg: 0 18px 40px rgba(10, 15, 44, 0.10), 0 4px 12px rgba(10, 15, 44, 0.06);
+      --shadow-brand: 0 12px 28px rgba(0, 3, 255, 0.32);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-fast: 120ms;
+      --dur-base: 220ms;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: var(--font-body);
+      background: var(--bg-app);
       min-height: 100vh;
-      padding: 2rem 1rem 4rem;
-      color: var(--gray-900);
+      padding: var(--space-8) var(--space-4);
+      color: var(--fg-1);
     }
 
     .container {
@@ -42,344 +103,417 @@
 
     .header {
       text-align: center;
-      margin-bottom: 2rem;
-      color: white;
+      margin-bottom: var(--space-8);
     }
-    .header .emoji { font-size: 3rem; margin-bottom: .5rem; }
-    .header h1 { font-size: 2rem; font-weight: 800; }
-    .header p { opacity: .85; margin-top: .25rem; font-size: 1rem; }
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: var(--fs-3xl);
+      font-weight: 700;
+      color: var(--brand-blue);
+      margin-bottom: var(--space-2);
+      letter-spacing: -0.02em;
+    }
+    .header p {
+      color: var(--fg-2);
+      font-size: var(--fs-sm);
+      line-height: var(--lh-normal);
+    }
 
     .card {
-      background: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      margin-bottom: 1.5rem;
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
     }
     .card h2 {
-      font-size: 1.1rem;
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
       font-weight: 700;
-      color: var(--gray-700);
-      margin-bottom: 1.5rem;
+      color: var(--fg-1);
+      margin-bottom: var(--space-5);
+    }
+
+    /* ── Ticket items (cart style) ── */
+    .ticket-item {
       display: flex;
       align-items: center;
-      gap: .5rem;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      border: 1.5px solid var(--border-2);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+      transition: border-color var(--dur-base) var(--ease-out),
+                  background var(--dur-base) var(--ease-out),
+                  box-shadow var(--dur-base) var(--ease-out);
+    }
+    .ticket-item.has-items {
+      border-color: var(--brand-blue);
+      background: var(--blue-50);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Ticket type selector */
-    .ticket-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .ticket-option {
-      position: relative;
-      cursor: pointer;
-    }
-    .ticket-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .ticket-card {
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      text-align: center;
-      transition: all .2s;
-      user-select: none;
-    }
-    .ticket-card .icon { font-size: 2rem; margin-bottom: .5rem; }
-    .ticket-card .name { font-weight: 700; font-size: 1rem; color: var(--gray-700); }
-    .ticket-card .sub { font-size: .75rem; color: var(--gray-400); margin-top: .1rem; }
-    .ticket-card .price {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-top: .5rem;
-    }
-
-    .ticket-option input:checked + .ticket-card {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .ticket-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(79,70,229,.15);
-    }
-
-    /* Quantity */
-    .qty-row {
+    .ticket-item-info {
       display: flex;
       align-items: center;
-      gap: 1rem;
-    }
-    .qty-row label {
-      font-size: .875rem;
-      font-weight: 600;
-      color: var(--gray-600);
+      gap: var(--space-4);
       flex: 1;
+      min-width: 0;
     }
+    .ticket-icon {
+      font-size: 1.75rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .ticket-texts { min-width: 0; }
+    .ticket-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--fs-md);
+      color: var(--fg-1);
+    }
+    .ticket-sub {
+      font-size: var(--fs-xs);
+      color: var(--fg-3);
+      margin-top: 2px;
+    }
+    .ticket-price {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      color: var(--brand-blue);
+      margin-top: var(--space-1);
+    }
+
     .qty-controls {
       display: flex;
       align-items: center;
-      gap: .5rem;
+      gap: var(--space-3);
+      flex-shrink: 0;
     }
     .qty-btn {
       width: 36px;
       height: 36px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      background: white;
-      font-size: 1.25rem;
+      border: 2px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      font-size: var(--fs-lg);
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all .15s;
+      transition: all var(--dur-fast) var(--ease-out);
+      color: var(--fg-2);
+      line-height: 1;
     }
-    .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .qty-btn:hover:not(:disabled) {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      transform: translateY(-1px);
+    }
+    .qty-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
     .qty-value {
-      font-size: 1.25rem;
+      font-size: var(--fs-lg);
       font-weight: 700;
       min-width: 2rem;
       text-align: center;
+      color: var(--fg-1);
+      font-family: var(--font-display);
     }
 
-    /* Form fields */
-    .form-row { margin-bottom: 1rem; }
-    .form-row label {
-      display: block;
-      font-size: .8125rem;
-      font-weight: 600;
-      color: var(--gray-600);
-      margin-bottom: .375rem;
+    /* ── Cart summary ── */
+    .cart-summary {
+      margin-top: var(--space-5);
+      border-top: 1px solid var(--border-1);
+      padding-top: var(--space-4);
     }
-    .form-row input {
-      width: 100%;
-      padding: .75rem 1rem;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 8px;
-      font-size: .9375rem;
-      font-family: inherit;
-      transition: border-color .2s;
-      background: white;
-      color: var(--gray-900);
-    }
-    .form-row input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79,70,229,.1);
-    }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-    /* Total */
-    .total-bar {
-      background: var(--primary-light);
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
+    .cart-line {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 1.5rem;
+      font-size: var(--fs-sm);
+      color: var(--fg-2);
+      margin-bottom: var(--space-2);
     }
-    .total-bar .label { font-size: .875rem; color: var(--gray-600); font-weight: 600; }
-    .total-bar .value { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
+    .cart-line .line-label { font-weight: 500; }
+    .cart-line .line-value { font-weight: 600; font-family: var(--font-display); }
 
-    /* Button */
+    .cart-empty {
+      text-align: center;
+      padding: var(--space-4) 0 var(--space-2);
+      font-size: var(--fs-sm);
+      color: var(--fg-muted);
+    }
+
+    .total-bar {
+      background: var(--blue-50);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-4);
+      border-left: 4px solid var(--brand-blue);
+    }
+    .total-bar .label {
+      font-size: var(--fs-sm);
+      color: var(--fg-2);
+      font-weight: 600;
+    }
+    .total-bar .value {
+      font-size: var(--fs-2xl);
+      font-weight: 800;
+      color: var(--brand-blue);
+      font-family: var(--font-display);
+    }
+
+    /* ── Form ── */
+    .form-row { margin-bottom: var(--space-4); }
+    .form-row label {
+      display: block;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--fg-1);
+      margin-bottom: var(--space-2);
+    }
+    .form-row input {
+      width: 100%;
+      padding: var(--space-3);
+      border: 1.5px solid var(--border-2);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: inherit;
+      transition: all var(--dur-base) var(--ease-out);
+      background: var(--bg-surface);
+      color: var(--fg-1);
+    }
+    .form-row input::placeholder { color: var(--fg-muted); }
+    .form-row input:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(0, 3, 255, 0.1);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
     .btn-pay {
       width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
+      padding: var(--space-4);
+      background: var(--brand-blue);
+      color: var(--fg-on-brand);
       border: none;
-      border-radius: var(--radius);
-      font-size: 1.0625rem;
+      border-radius: var(--radius-md);
+      font-size: var(--fs-md);
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      margin-top: 1.25rem;
-      transition: transform .15s, box-shadow .15s;
+      margin-top: var(--space-5);
+      transition: all var(--dur-base) var(--ease-out);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: .5rem;
+      gap: var(--space-3);
     }
-    .btn-pay:hover {
+    .btn-pay:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(79,70,229,.4);
+      box-shadow: var(--shadow-brand);
     }
     .btn-pay:active { transform: translateY(0); }
-    .btn-pay:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .btn-pay:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     .pix-badge {
       display: inline-flex;
       align-items: center;
-      gap: .4rem;
-      background: #E8F5E9;
-      color: #2E7D32;
-      border-radius: 6px;
-      padding: .2rem .6rem;
-      font-size: .75rem;
+      gap: var(--space-2);
+      background: var(--yellow-50);
+      color: #7a6000;
+      border-radius: var(--radius-sm);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--fs-xs);
       font-weight: 600;
     }
 
     .footer-note {
       text-align: center;
-      color: rgba(255,255,255,.7);
-      font-size: .8125rem;
-      margin-top: 1.5rem;
+      color: var(--fg-3);
+      font-size: var(--fs-xs);
+      margin-top: var(--space-6);
+      line-height: var(--lh-loose);
     }
 
     @media (max-width: 480px) {
       .form-grid { grid-template-columns: 1fr; }
-      .ticket-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: var(--fs-2xl); }
+      .ticket-item { flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="emoji">🎟️</div>
-      <h1 id="evento-nome">Carregando...</h1>
-      <p>Compra de ingressos via PIX — rápido e seguro</p>
+      <h1>Comprar Ingressos</h1>
+      <p>Pagamento via PIX — rápido e seguro</p>
     </div>
 
     <form id="form-checkout" action="/checkout" method="POST">
-      <!-- Tipo de ingresso -->
       <div class="card">
-        <h2>🎫 Escolha seu ingresso</h2>
+        <h2>Selecione seus ingressos</h2>
 
-        <div class="ticket-grid">
-          <label class="ticket-option">
-            <input type="radio" name="tipo" value="mesa" id="tipo-mesa" required />
-            <div class="ticket-card">
-              <div class="icon">🪑</div>
-              <div class="name">Mesa</div>
-              <div class="sub">4 lugares</div>
-              <div class="price">R$ 130,00</div>
+        <!-- Mesa -->
+        <div class="ticket-item" id="item-mesa">
+          <div class="ticket-item-info">
+            <span class="ticket-icon">●</span>
+            <div class="ticket-texts">
+              <div class="ticket-name">Mesa</div>
+              <div class="ticket-sub">4 lugares</div>
+              <div class="ticket-price">R$ 130,00</div>
             </div>
-          </label>
-
-          <label class="ticket-option">
-            <input type="radio" name="tipo" value="individual" id="tipo-individual" required />
-            <div class="ticket-card">
-              <div class="icon">👤</div>
-              <div class="name">Individual</div>
-              <div class="sub">1 lugar</div>
-              <div class="price">R$ 40,00</div>
-            </div>
-          </label>
-        </div>
-
-        <div class="qty-row">
-          <label>Quantidade</label>
+          </div>
           <div class="qty-controls">
-            <button type="button" class="qty-btn" id="btn-minus">−</button>
-            <span class="qty-value" id="qty-display">1</span>
-            <button type="button" class="qty-btn" id="btn-plus">+</button>
+            <button type="button" class="qty-btn" id="mesa-minus" onclick="updateQty('mesa', -1)" disabled>−</button>
+            <span class="qty-value" id="mesa-qty-display">0</span>
+            <button type="button" class="qty-btn" id="mesa-plus" onclick="updateQty('mesa', 1)">+</button>
           </div>
         </div>
-        <input type="hidden" name="quantidade" id="quantidade-input" value="1" />
 
-        <div class="total-bar">
-          <span class="label">Total a pagar</span>
-          <span class="value" id="total-display">—</span>
+        <!-- Individual -->
+        <div class="ticket-item" id="item-individual">
+          <div class="ticket-item-info">
+            <span class="ticket-icon">●</span>
+            <div class="ticket-texts">
+              <div class="ticket-name">Individual</div>
+              <div class="ticket-sub">1 lugar</div>
+              <div class="ticket-price">R$ 40,00</div>
+            </div>
+          </div>
+          <div class="qty-controls">
+            <button type="button" class="qty-btn" id="individual-minus" onclick="updateQty('individual', -1)" disabled>−</button>
+            <span class="qty-value" id="individual-qty-display">0</span>
+            <button type="button" class="qty-btn" id="individual-plus" onclick="updateQty('individual', 1)">+</button>
+          </div>
+        </div>
+
+        <input type="hidden" name="mesa_qty" id="mesa-qty-input" value="0" />
+        <input type="hidden" name="individual_qty" id="individual-qty-input" value="0" />
+
+        <!-- Cart summary -->
+        <div class="cart-summary">
+          <div id="cart-empty" class="cart-empty">Nenhum ingresso selecionado</div>
+          <div id="cart-lines"></div>
+          <div class="total-bar">
+            <span class="label">Total a pagar</span>
+            <span class="value" id="total-display">R$ 0,00</span>
+          </div>
         </div>
       </div>
 
-      <!-- Dados do responsável -->
       <div class="card">
-        <h2>👤 Dados do responsável</h2>
+        <h2>Dados do responsável</h2>
 
         <div class="form-row">
-          <label for="nome">Nome completo *</label>
+          <label for="nome">Nome completo</label>
           <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required autocomplete="name" />
         </div>
 
         <div class="form-grid">
           <div class="form-row">
-            <label for="cpf">CPF *</label>
+            <label for="cpf">CPF</label>
             <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required inputmode="numeric" />
           </div>
           <div class="form-row">
-            <label for="telefone">Telefone *</label>
+            <label for="telefone">Telefone</label>
             <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" maxlength="15" required inputmode="numeric" />
           </div>
         </div>
 
         <div class="form-row">
-          <label for="email">E-mail *</label>
+          <label for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
         </div>
 
-        <button type="submit" class="btn-pay" id="btn-pay">
-          <span>Gerar QR Code PIX</span>
-          <span class="pix-badge">⚡ PIX</span>
+        <button type="submit" class="btn-pay" id="btn-pay" disabled>
+          <span id="btn-pay-label">Selecione ao menos 1 ingresso</span>
+          <span class="pix-badge" id="pix-badge-hidden" style="display:none">PIX</span>
         </button>
       </div>
     </form>
 
-    <p class="footer-note">🔒 Pagamento seguro via PIX — Efí Bank</p>
+    <p class="footer-note">Pagamento seguro via PIX — Efí Bank</p>
   </div>
 
   <script>
     const PRECOS = { mesa: 130, individual: 40 };
-    let tipo = null;
-    let quantidade = 1;
+    const qtds = { mesa: 0, individual: 0 };
 
-    // Nome do evento
-    fetch('/api/stats')
-      .then(r => r.json())
-      .then(() => {})
-      .catch(() => {});
+    function updateQty(tipo, delta) {
+      const novaQtd = Math.max(0, Math.min(20, qtds[tipo] + delta));
+      qtds[tipo] = novaQtd;
 
-    document.title = 'Comprar Ingressos';
-    fetch('/api/stats').catch(() => {});
+      document.getElementById(`${tipo}-qty-display`).textContent = novaQtd;
+      document.getElementById(`${tipo}-qty-input`).value = novaQtd;
 
-    // Carrega nome do evento via query na página de confirmação
-    // (não temos rota dedicada, mas podemos deixar o título padrão)
+      const minusBtn = document.getElementById(`${tipo}-minus`);
+      minusBtn.disabled = novaQtd === 0;
 
-    function updateTotal() {
-      const display = document.getElementById('total-display');
-      const totalBar = document.querySelector('.total-bar');
-      if (!tipo) {
-        display.textContent = '—';
-        return;
-      }
-      const valor = PRECOS[tipo] * quantidade;
-      display.textContent = `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      const item = document.getElementById(`item-${tipo}`);
+      item.classList.toggle('has-items', novaQtd > 0);
+
+      renderCart();
     }
 
-    document.querySelectorAll('input[name="tipo"]').forEach(radio => {
-      radio.addEventListener('change', e => {
-        tipo = e.target.value;
-        updateTotal();
-      });
-    });
+    function renderCart() {
+      const total = qtds.mesa * PRECOS.mesa + qtds.individual * PRECOS.individual;
+      const temItens = qtds.mesa > 0 || qtds.individual > 0;
 
-    document.getElementById('btn-minus').addEventListener('click', () => {
-      if (quantidade > 1) {
-        quantidade--;
-        document.getElementById('qty-display').textContent = quantidade;
-        document.getElementById('quantidade-input').value = quantidade;
-        updateTotal();
-      }
-    });
+      const cartEmpty = document.getElementById('cart-empty');
+      const cartLines = document.getElementById('cart-lines');
+      cartEmpty.style.display = temItens ? 'none' : 'block';
 
-    document.getElementById('btn-plus').addEventListener('click', () => {
-      if (quantidade < 20) {
-        quantidade++;
-        document.getElementById('qty-display').textContent = quantidade;
-        document.getElementById('quantidade-input').value = quantidade;
-        updateTotal();
+      const linhas = [];
+      if (qtds.mesa > 0) {
+        const sub = qtds.mesa * PRECOS.mesa;
+        linhas.push(`
+          <div class="cart-line">
+            <span class="line-label">Mesa × ${qtds.mesa}</span>
+            <span class="line-value">R$ ${sub.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          </div>`);
       }
-    });
+      if (qtds.individual > 0) {
+        const sub = qtds.individual * PRECOS.individual;
+        linhas.push(`
+          <div class="cart-line">
+            <span class="line-label">Individual × ${qtds.individual}</span>
+            <span class="line-value">R$ ${sub.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          </div>`);
+      }
+      cartLines.innerHTML = linhas.join('');
+
+      document.getElementById('total-display').textContent =
+        `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+      const btn = document.getElementById('btn-pay');
+      const badge = document.getElementById('pix-badge-hidden');
+      btn.disabled = !temItens;
+      if (temItens) {
+        document.getElementById('btn-pay-label').textContent = 'Gerar QR Code PIX';
+        badge.style.display = 'inline-flex';
+      } else {
+        document.getElementById('btn-pay-label').textContent = 'Selecione ao menos 1 ingresso';
+        badge.style.display = 'none';
+      }
+    }
 
     // CPF mask
     document.getElementById('cpf').addEventListener('input', function () {
@@ -403,9 +537,10 @@
 
     // Form submit
     document.getElementById('form-checkout').addEventListener('submit', function (e) {
-      if (!tipo) {
+      const temItens = qtds.mesa > 0 || qtds.individual > 0;
+      if (!temItens) {
         e.preventDefault();
-        alert('Por favor, selecione o tipo de ingresso.');
+        alert('Selecione ao menos 1 ingresso.');
         return;
       }
       const cpfLimpo = document.getElementById('cpf').value.replace(/\D/g, '');
@@ -416,7 +551,8 @@
       }
       const btn = document.getElementById('btn-pay');
       btn.disabled = true;
-      btn.innerHTML = '<span>Gerando cobrança PIX...</span>';
+      document.getElementById('btn-pay-label').textContent = 'Gerando cobrança PIX...';
+      document.getElementById('pix-badge-hidden').style.display = 'none';
     });
   </script>
 </body>

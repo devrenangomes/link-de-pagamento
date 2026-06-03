@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 const { criarCobranca, getQRCode, consultarCobranca } = require('./services/efibank');
 const { salvarVenda, listarVendas, atualizarStatus } = require('./services/csv');
 
@@ -10,62 +9,68 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Armazena dados de pagamento em memória enquanto aguarda confirmação
+// Dados de pagamento em memória enquanto aguarda confirmação
 const pedidos = new Map();
 
-const PRECOS = { mesa: 130.00, individual: 40.00 };
+const PRECOS    = { mesa: 130.00, individual: 40.00 };
 const DESCRICAO = { mesa: 'Mesa (4 lugares)', individual: 'Individual' };
 
 // ─── CHECKOUT ─────────────────────────────────────────────────────────────────
 
 app.post('/checkout', async (req, res) => {
-  const { nome, cpf, email, telefone, tipo, quantidade } = req.body;
+  const { nome, cpf, email, telefone, mesa_qty, individual_qty } = req.body;
 
-  if (!nome || !cpf || !email || !telefone || !tipo || !quantidade) {
-    return res.status(400).send('Todos os campos são obrigatórios.');
+  if (!nome || !cpf || !email || !telefone) {
+    return res.status(400).send('Todos os campos de cadastro são obrigatórios.');
   }
 
-  const preco = PRECOS[tipo];
-  if (!preco) return res.status(400).send('Tipo de ingresso inválido.');
+  const qtdMesa       = Math.max(0, parseInt(mesa_qty)       || 0);
+  const qtdIndividual = Math.max(0, parseInt(individual_qty) || 0);
 
-  const qtd = Math.max(1, parseInt(quantidade) || 1);
-  const total = preco * qtd;
+  if (qtdMesa === 0 && qtdIndividual === 0) {
+    return res.status(400).send('Selecione ao menos 1 ingresso.');
+  }
+
+  // Monta itens do carrinho
+  const itens = [];
+  if (qtdMesa > 0)       itens.push({ tipo: 'mesa',       quantidade: qtdMesa });
+  if (qtdIndividual > 0) itens.push({ tipo: 'individual', quantidade: qtdIndividual });
+
+  const total = itens.reduce((acc, i) => acc + PRECOS[i.tipo] * i.quantidade, 0);
+
+  const descricaoPartes = itens.map(i => `${DESCRICAO[i.tipo]} x${i.quantidade}`);
+  const descricao = descricaoPartes.join(', ') + ` — ${process.env.EVENTO_NOME || 'Evento'}`;
+
   const cpfLimpo = cpf.replace(/\D/g, '');
 
   try {
-    const cobranca = await criarCobranca({
-      nome,
-      cpf: cpfLimpo,
-      valor: total,
-      descricao: `Ingresso ${DESCRICAO[tipo]} x${qtd} — ${process.env.EVENTO_NOME || 'Evento'}`,
-    });
+    const cobranca = await criarCobranca({ nome, cpf: cpfLimpo, valor: total, descricao });
+    const qrcode   = await getQRCode(cobranca.loc.id);
+    const agora    = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 
-    const qrcode = await getQRCode(cobranca.loc.id);
-
-    const venda = {
-      id: cobranca.txid,
-      data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
-      nome,
-      cpf,
-      email,
-      telefone,
-      tipo,
-      quantidade: qtd,
-      total: total.toFixed(2),
-      status: 'PENDENTE',
-      txid: cobranca.txid,
-    };
-
-    await salvarVenda(venda);
+    // Salva uma linha por tipo de ingresso no CSV (mesmo txid)
+    for (const item of itens) {
+      await salvarVenda({
+        id:         cobranca.txid,
+        data:       agora,
+        nome,
+        cpf,
+        email,
+        telefone,
+        tipo:       item.tipo,
+        quantidade: item.quantidade,
+        total:      (PRECOS[item.tipo] * item.quantidade).toFixed(2),
+        status:     'PENDENTE',
+        txid:       cobranca.txid,
+      });
+    }
 
     pedidos.set(cobranca.txid, {
       nome,
-      tipo,
-      descricao: DESCRICAO[tipo],
-      quantidade: qtd,
+      itens,
       total: total.toFixed(2),
-      qrcode: qrcode.qrcode,
-      imagem: qrcode.imagemQrcode,
+      qrcode:    qrcode.qrcode,
+      imagem:    qrcode.imagemQrcode,
       expiracao: cobranca.calendario.expiracao,
     });
 
@@ -91,12 +96,10 @@ app.get('/api/status/:txid', async (req, res) => {
   try {
     const cobranca = await consultarCobranca(req.params.txid);
     const pago = cobranca.status === 'CONCLUIDA';
-
     if (pago) {
       await atualizarStatus(req.params.txid, 'PAGO');
       pedidos.delete(req.params.txid);
     }
-
     res.json({ status: cobranca.status, pago });
   } catch {
     const vendas = await listarVendas();
@@ -107,8 +110,7 @@ app.get('/api/status/:txid', async (req, res) => {
 
 app.get('/api/stats', async (req, res) => {
   const vendas = await listarVendas();
-
-  const pagas = vendas.filter(v => v.status === 'PAGO');
+  const pagas  = vendas.filter(v => v.status === 'PAGO');
 
   const mesas = pagas
     .filter(v => v.tipo === 'mesa')
@@ -118,22 +120,20 @@ app.get('/api/stats', async (req, res) => {
     .filter(v => v.tipo === 'individual')
     .reduce((acc, v) => acc + parseInt(v.quantidade || 0), 0);
 
-  const arrecadado = pagas
-    .reduce((acc, v) => acc + parseFloat(v.total || 0), 0);
+  const arrecadado = pagas.reduce((acc, v) => acc + parseFloat(v.total || 0), 0);
 
   res.json({
     mesas,
     individuais,
-    arrecadado: arrecadado.toFixed(2),
+    arrecadado:  arrecadado.toFixed(2),
     totalVendas: pagas.length,
-    pendentes: vendas.filter(v => v.status === 'PENDENTE').length,
+    pendentes:   vendas.filter(v => v.status === 'PENDENTE').length,
     vendas,
   });
 });
 
 app.get('/api/exportar-csv', (req, res) => {
-  const filePath = path.join(__dirname, 'data', 'vendas.csv');
-  res.download(filePath, 'vendas.csv');
+  res.download(path.join(__dirname, 'data', 'vendas.csv'), 'vendas.csv');
 });
 
 // ─── WEBHOOK EFÍ BANK ──────────────────────────────────────────────────────────
