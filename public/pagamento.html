@@ -387,9 +387,14 @@
         if (!res.ok) throw new Error('Pedido não encontrado');
         const d = await res.json();
 
+        const DESCRICAO = { mesa: 'Mesa (4 lugares)', individual: 'Individual' };
+        const linhasItens = (d.itens || []).map(i =>
+          `<div class="detalhe">• ${DESCRICAO[i.tipo] || i.tipo} × ${i.quantidade}</div>`
+        ).join('');
+
         document.getElementById('pedido-info-box').innerHTML = `
           <div class="nome">${d.nome}</div>
-          <div class="detalhe">Ingresso ${d.descricao} × ${d.quantidade}</div>
+          ${linhasItens}
           <div class="total">R$ ${parseFloat(d.total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
         `;
 

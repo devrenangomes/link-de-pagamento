@@ -134,82 +134,63 @@
       margin-bottom: var(--space-5);
     }
 
-    .ticket-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    /* ── Ticket items (cart style) ── */
+    .ticket-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: var(--space-4);
-      margin-bottom: var(--space-5);
-    }
-
-    .ticket-option {
-      position: relative;
-      cursor: pointer;
-    }
-    .ticket-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .ticket-card {
-      border: 2px solid var(--border-2);
+      padding: var(--space-4);
+      border: 1.5px solid var(--border-2);
       border-radius: var(--radius-md);
-      padding: var(--space-5);
-      text-align: center;
-      transition: all var(--dur-base) var(--ease-out);
-      user-select: none;
-    }
-    .ticket-card .icon {
-      font-size: 2rem;
       margin-bottom: var(--space-3);
-      line-height: 1;
+      transition: border-color var(--dur-base) var(--ease-out),
+                  background var(--dur-base) var(--ease-out),
+                  box-shadow var(--dur-base) var(--ease-out);
     }
-    .ticket-card .name {
-      font-weight: 700;
-      font-size: var(--fs-md);
-      color: var(--fg-1);
-      font-family: var(--font-display);
-    }
-    .ticket-card .sub {
-      font-size: var(--fs-xs);
-      color: var(--fg-3);
-      margin-top: var(--space-1);
-    }
-    .ticket-card .price {
-      font-size: var(--fs-2xl);
-      font-weight: 800;
-      color: var(--brand-blue);
-      margin-top: var(--space-3);
-      font-family: var(--font-display);
-    }
-
-    .ticket-option input:checked + .ticket-card {
+    .ticket-item.has-items {
       border-color: var(--brand-blue);
       background: var(--blue-50);
-      box-shadow: var(--shadow-md);
-    }
-    .ticket-card:hover {
-      border-color: var(--brand-blue);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-sm);
     }
 
-    .qty-row {
+    .ticket-item-info {
       display: flex;
       align-items: center;
       gap: var(--space-4);
-      margin-bottom: var(--space-5);
-    }
-    .qty-row label {
-      font-size: var(--fs-sm);
-      font-weight: 600;
-      color: var(--fg-1);
       flex: 1;
+      min-width: 0;
     }
+    .ticket-icon {
+      font-size: 1.75rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .ticket-texts { min-width: 0; }
+    .ticket-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--fs-md);
+      color: var(--fg-1);
+    }
+    .ticket-sub {
+      font-size: var(--fs-xs);
+      color: var(--fg-3);
+      margin-top: 2px;
+    }
+    .ticket-price {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      color: var(--brand-blue);
+      margin-top: var(--space-1);
+    }
+
     .qty-controls {
       display: flex;
       align-items: center;
       gap: var(--space-3);
+      flex-shrink: 0;
     }
     .qty-btn {
       width: 36px;
@@ -225,11 +206,16 @@
       justify-content: center;
       transition: all var(--dur-fast) var(--ease-out);
       color: var(--fg-2);
+      line-height: 1;
     }
-    .qty-btn:hover {
+    .qty-btn:hover:not(:disabled) {
       border-color: var(--brand-blue);
       color: var(--brand-blue);
       transform: translateY(-1px);
+    }
+    .qty-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
     }
     .qty-value {
       font-size: var(--fs-lg);
@@ -237,8 +223,56 @@
       min-width: 2rem;
       text-align: center;
       color: var(--fg-1);
+      font-family: var(--font-display);
     }
 
+    /* ── Cart summary ── */
+    .cart-summary {
+      margin-top: var(--space-5);
+      border-top: 1px solid var(--border-1);
+      padding-top: var(--space-4);
+    }
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--fs-sm);
+      color: var(--fg-2);
+      margin-bottom: var(--space-2);
+    }
+    .cart-line .line-label { font-weight: 500; }
+    .cart-line .line-value { font-weight: 600; font-family: var(--font-display); }
+
+    .cart-empty {
+      text-align: center;
+      padding: var(--space-4) 0 var(--space-2);
+      font-size: var(--fs-sm);
+      color: var(--fg-muted);
+    }
+
+    .total-bar {
+      background: var(--blue-50);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-4);
+      border-left: 4px solid var(--brand-blue);
+    }
+    .total-bar .label {
+      font-size: var(--fs-sm);
+      color: var(--fg-2);
+      font-weight: 600;
+    }
+    .total-bar .value {
+      font-size: var(--fs-2xl);
+      font-weight: 800;
+      color: var(--brand-blue);
+      font-family: var(--font-display);
+    }
+
+    /* ── Form ── */
     .form-row { margin-bottom: var(--space-4); }
     .form-row label {
       display: block;
@@ -258,9 +292,7 @@
       background: var(--bg-surface);
       color: var(--fg-1);
     }
-    .form-row input::placeholder {
-      color: var(--fg-muted);
-    }
+    .form-row input::placeholder { color: var(--fg-muted); }
     .form-row input:focus {
       outline: none;
       border-color: var(--brand-blue);
@@ -270,28 +302,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: var(--space-4);
-    }
-
-    .total-bar {
-      background: var(--blue-50);
-      border-radius: var(--radius-md);
-      padding: var(--space-4);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: var(--space-5);
-      border-left: 4px solid var(--brand-blue);
-    }
-    .total-bar .label {
-      font-size: var(--fs-sm);
-      color: var(--fg-2);
-      font-weight: 600;
-    }
-    .total-bar .value {
-      font-size: var(--fs-2xl);
-      font-weight: 800;
-      color: var(--brand-blue);
-      font-family: var(--font-display);
     }
 
     .btn-pay {
@@ -312,13 +322,13 @@
       justify-content: center;
       gap: var(--space-3);
     }
-    .btn-pay:hover {
+    .btn-pay:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: var(--shadow-brand);
     }
     .btn-pay:active { transform: translateY(0); }
     .btn-pay:disabled {
-      opacity: 0.6;
+      opacity: 0.45;
       cursor: not-allowed;
       transform: none;
     }
@@ -345,57 +355,67 @@
 
     @media (max-width: 480px) {
       .form-grid { grid-template-columns: 1fr; }
-      .ticket-grid { grid-template-columns: 1fr; }
       .header h1 { font-size: var(--fs-2xl); }
+      .ticket-item { flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1 id="evento-nome">Comprar Ingressos</h1>
+      <h1>Comprar Ingressos</h1>
       <p>Pagamento via PIX — rápido e seguro</p>
     </div>
 
     <form id="form-checkout" action="/checkout" method="POST">
       <div class="card">
-        <h2>Selecione seu ingresso</h2>
+        <h2>Selecione seus ingressos</h2>
 
-        <div class="ticket-grid">
-          <label class="ticket-option">
-            <input type="radio" name="tipo" value="mesa" id="tipo-mesa" required />
-            <div class="ticket-card">
-              <div class="icon">●</div>
-              <div class="name">Mesa</div>
-              <div class="sub">4 lugares</div>
-              <div class="price">R$ 130,00</div>
+        <!-- Mesa -->
+        <div class="ticket-item" id="item-mesa">
+          <div class="ticket-item-info">
+            <span class="ticket-icon">●</span>
+            <div class="ticket-texts">
+              <div class="ticket-name">Mesa</div>
+              <div class="ticket-sub">4 lugares</div>
+              <div class="ticket-price">R$ 130,00</div>
             </div>
-          </label>
-
-          <label class="ticket-option">
-            <input type="radio" name="tipo" value="individual" id="tipo-individual" required />
-            <div class="ticket-card">
-              <div class="icon">●</div>
-              <div class="name">Individual</div>
-              <div class="sub">1 lugar</div>
-              <div class="price">R$ 40,00</div>
-            </div>
-          </label>
-        </div>
-
-        <div class="qty-row">
-          <label>Quantidade</label>
+          </div>
           <div class="qty-controls">
-            <button type="button" class="qty-btn" id="btn-minus">−</button>
-            <span class="qty-value" id="qty-display">1</span>
-            <button type="button" class="qty-btn" id="btn-plus">+</button>
+            <button type="button" class="qty-btn" id="mesa-minus" onclick="updateQty('mesa', -1)" disabled>−</button>
+            <span class="qty-value" id="mesa-qty-display">0</span>
+            <button type="button" class="qty-btn" id="mesa-plus" onclick="updateQty('mesa', 1)">+</button>
           </div>
         </div>
-        <input type="hidden" name="quantidade" id="quantidade-input" value="1" />
 
-        <div class="total-bar">
-          <span class="label">Total a pagar</span>
-          <span class="value" id="total-display">—</span>
+        <!-- Individual -->
+        <div class="ticket-item" id="item-individual">
+          <div class="ticket-item-info">
+            <span class="ticket-icon">●</span>
+            <div class="ticket-texts">
+              <div class="ticket-name">Individual</div>
+              <div class="ticket-sub">1 lugar</div>
+              <div class="ticket-price">R$ 40,00</div>
+            </div>
+          </div>
+          <div class="qty-controls">
+            <button type="button" class="qty-btn" id="individual-minus" onclick="updateQty('individual', -1)" disabled>−</button>
+            <span class="qty-value" id="individual-qty-display">0</span>
+            <button type="button" class="qty-btn" id="individual-plus" onclick="updateQty('individual', 1)">+</button>
+          </div>
+        </div>
+
+        <input type="hidden" name="mesa_qty" id="mesa-qty-input" value="0" />
+        <input type="hidden" name="individual_qty" id="individual-qty-input" value="0" />
+
+        <!-- Cart summary -->
+        <div class="cart-summary">
+          <div id="cart-empty" class="cart-empty">Nenhum ingresso selecionado</div>
+          <div id="cart-lines"></div>
+          <div class="total-bar">
+            <span class="label">Total a pagar</span>
+            <span class="value" id="total-display">R$ 0,00</span>
+          </div>
         </div>
       </div>
 
@@ -423,9 +443,9 @@
           <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
         </div>
 
-        <button type="submit" class="btn-pay" id="btn-pay">
-          <span>Gerar QR Code PIX</span>
-          <span class="pix-badge">PIX</span>
+        <button type="submit" class="btn-pay" id="btn-pay" disabled>
+          <span id="btn-pay-label">Selecione ao menos 1 ingresso</span>
+          <span class="pix-badge" id="pix-badge-hidden" style="display:none">PIX</span>
         </button>
       </div>
     </form>
@@ -435,47 +455,67 @@
 
   <script>
     const PRECOS = { mesa: 130, individual: 40 };
-    let tipo = null;
-    let quantidade = 1;
+    const qtds = { mesa: 0, individual: 0 };
 
-    document.title = 'Comprar Ingressos';
-    fetch('/api/stats').catch(() => {});
+    function updateQty(tipo, delta) {
+      const novaQtd = Math.max(0, Math.min(20, qtds[tipo] + delta));
+      qtds[tipo] = novaQtd;
 
-    function updateTotal() {
-      const display = document.getElementById('total-display');
-      if (!tipo) {
-        display.textContent = '—';
-        return;
-      }
-      const valor = PRECOS[tipo] * quantidade;
-      display.textContent = `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById(`${tipo}-qty-display`).textContent = novaQtd;
+      document.getElementById(`${tipo}-qty-input`).value = novaQtd;
+
+      const minusBtn = document.getElementById(`${tipo}-minus`);
+      minusBtn.disabled = novaQtd === 0;
+
+      const item = document.getElementById(`item-${tipo}`);
+      item.classList.toggle('has-items', novaQtd > 0);
+
+      renderCart();
     }
 
-    document.querySelectorAll('input[name="tipo"]').forEach(radio => {
-      radio.addEventListener('change', e => {
-        tipo = e.target.value;
-        updateTotal();
-      });
-    });
+    function renderCart() {
+      const total = qtds.mesa * PRECOS.mesa + qtds.individual * PRECOS.individual;
+      const temItens = qtds.mesa > 0 || qtds.individual > 0;
 
-    document.getElementById('btn-minus').addEventListener('click', () => {
-      if (quantidade > 1) {
-        quantidade--;
-        document.getElementById('qty-display').textContent = quantidade;
-        document.getElementById('quantidade-input').value = quantidade;
-        updateTotal();
+      const cartEmpty = document.getElementById('cart-empty');
+      const cartLines = document.getElementById('cart-lines');
+      cartEmpty.style.display = temItens ? 'none' : 'block';
+
+      const linhas = [];
+      if (qtds.mesa > 0) {
+        const sub = qtds.mesa * PRECOS.mesa;
+        linhas.push(`
+          <div class="cart-line">
+            <span class="line-label">Mesa × ${qtds.mesa}</span>
+            <span class="line-value">R$ ${sub.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          </div>`);
       }
-    });
-
-    document.getElementById('btn-plus').addEventListener('click', () => {
-      if (quantidade < 20) {
-        quantidade++;
-        document.getElementById('qty-display').textContent = quantidade;
-        document.getElementById('quantidade-input').value = quantidade;
-        updateTotal();
+      if (qtds.individual > 0) {
+        const sub = qtds.individual * PRECOS.individual;
+        linhas.push(`
+          <div class="cart-line">
+            <span class="line-label">Individual × ${qtds.individual}</span>
+            <span class="line-value">R$ ${sub.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          </div>`);
       }
-    });
+      cartLines.innerHTML = linhas.join('');
 
+      document.getElementById('total-display').textContent =
+        `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+      const btn = document.getElementById('btn-pay');
+      const badge = document.getElementById('pix-badge-hidden');
+      btn.disabled = !temItens;
+      if (temItens) {
+        document.getElementById('btn-pay-label').textContent = 'Gerar QR Code PIX';
+        badge.style.display = 'inline-flex';
+      } else {
+        document.getElementById('btn-pay-label').textContent = 'Selecione ao menos 1 ingresso';
+        badge.style.display = 'none';
+      }
+    }
+
+    // CPF mask
     document.getElementById('cpf').addEventListener('input', function () {
       let v = this.value.replace(/\D/g, '').slice(0, 11);
       v = v.replace(/(\d{3})(\d)/, '$1.$2');
@@ -484,6 +524,7 @@
       this.value = v;
     });
 
+    // Phone mask
     document.getElementById('telefone').addEventListener('input', function () {
       let v = this.value.replace(/\D/g, '').slice(0, 11);
       if (v.length >= 7) {
@@ -494,10 +535,12 @@
       this.value = v;
     });
 
+    // Form submit
     document.getElementById('form-checkout').addEventListener('submit', function (e) {
-      if (!tipo) {
+      const temItens = qtds.mesa > 0 || qtds.individual > 0;
+      if (!temItens) {
         e.preventDefault();
-        alert('Por favor, selecione o tipo de ingresso.');
+        alert('Selecione ao menos 1 ingresso.');
         return;
       }
       const cpfLimpo = document.getElementById('cpf').value.replace(/\D/g, '');
@@ -508,7 +551,8 @@
       }
       const btn = document.getElementById('btn-pay');
       btn.disabled = true;
-      btn.innerHTML = '<span>Gerando cobrança PIX...</span>';
+      document.getElementById('btn-pay-label').textContent = 'Gerando cobrança PIX...';
+      document.getElementById('pix-badge-hidden').style.display = 'none';
     });
   </script>
 </body>
